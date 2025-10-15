@@ -93,7 +93,7 @@ def mostrar_clientes(ventana, volver_callback):
         entry_direccion.delete(0, tk.END)
 
 
-    #editar clientes-------
+    #editar clientes
     def editar_clientes():
         cliente_seleccionado = tabla.focus()
         if not cliente_seleccionado:

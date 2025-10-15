@@ -12,9 +12,6 @@ def limpiar_ventana(ventana):
 
 def mostrar_matematica(ventana, volver_callback):
     limpiar_ventana(ventana)
-    btn_volver = tk.Button(ventana, text="Regresar al menú principal", width=25, height=2, bg="#E04E4E", fg="white",
-                           command=volver_callback)
-    btn_volver.pack(pady=10)
 
     # Solo una ventana principal
     titulo = tk.Label(ventana, text="Seleccione qué quiere resolver:", font=("Arial", 16, "bold"))
@@ -31,5 +28,9 @@ def mostrar_matematica(ventana, volver_callback):
     btn_algebra = tk.Button(ventana, text="Conjuntos", width=25, height=2, bg="#D08235", fg="white",
                             command=lambda: conjuntos.mostrar_conjuntos(ventana, lambda: mostrar_matematica(ventana, volver_callback)))
     btn_algebra.pack(pady=10)
+
+    btn_volver = tk.Button(ventana, text="Regresar al menú principal", width=25, height=2, bg="#E04E4E", fg="white",
+                           command=volver_callback)
+    btn_volver.pack(pady=10)
 
     ventana.mainloop()

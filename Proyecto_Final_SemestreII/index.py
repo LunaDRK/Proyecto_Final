@@ -22,7 +22,7 @@ def mostrar_principal():
                                command=lambda: matematicaD.mostrar_matematica(ventana, mostrar_principal))
     btn_mate.pack(pady=10)
     
-    btn_algebra = tk.Button(ventana, text="Precalculo", width=25, height=2, bg="#D08235", fg="white",
+    btn_algebra = tk.Button(ventana, text="Algebra Lineal", width=25, height=2, bg="#D08235", fg="white",
                                command=lambda: algebraLineal.mostrar_algebra(ventana, mostrar_principal))
     btn_algebra.pack(pady=10)
 
