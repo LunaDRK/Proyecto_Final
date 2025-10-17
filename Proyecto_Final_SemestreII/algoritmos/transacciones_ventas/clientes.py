@@ -241,11 +241,11 @@ def mostrar_clientes(ventana, volver_callback):
     frame_botones = tk.Frame(ventana, bg="#F0F0F0")
     frame_botones.pack(pady=10)
 
-    tk.Button(frame_botones, text="Editar", bg="#FFC107", fg="black", font=("Arial", 12, "bold"),
-                    command=editar_clientes).grid(row=0, column=1, padx=5)
+    tk.Button(frame_buscar, text="Editar", bg="#FFC107", fg="black", font=("Arial", 12, "bold"),
+                    command=editar_clientes).grid(row=0, column=4, padx=5)
 
-    tk.Button(frame_botones, text="Eliminar", bg="#F44336", fg="white",
-            font=("Arial", 12, "bold"), command=eliminar_cliente).grid(row=0, column=2, padx=5)
+    tk.Button(frame_buscar, text="Eliminar", bg="#F44336", fg="white",
+            font=("Arial", 12, "bold"), command=eliminar_cliente).grid(row=0, column=5, padx=5)
 
 
     # Tabla de clientes

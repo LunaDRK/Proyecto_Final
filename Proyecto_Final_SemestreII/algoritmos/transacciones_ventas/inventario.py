@@ -115,6 +115,108 @@ def mostrar_inventario(ventana, volver_callback):
         entry_proveedor.delete(0, tk.END)
         entry_precio.delete(0, tk.END)
 
+    def editar_productos():
+        producto_seleccionado = tabla.focus()
+        if not producto_seleccionado:
+            messagebox.showwarning("Editar", "Selecciona dando un click sobre el producto para editar")
+            return
+        
+        valores_originales = tabla.item(producto_seleccionado, "values")
+        codigo_original, nombre_original, existencia_original, proveedor_original, precio_original = valores_originales
+
+        #crea una ventana emergente para un form de editar
+        ventana_editar = tk.Toplevel(ventana)
+        ventana_editar.title("Editar Producto")
+        ventana_editar.geometry("400x550")
+        ventana_editar.configure(bg="#F0F0F0")
+
+        tk.Label(ventana_editar, text="Código:", font=("Arial", 12), bg="#F0F0F0").grid(row=0, column=0, padx=10, pady=10)
+        entry_codigo_editar = tk.Entry(ventana_editar, width=30)
+        entry_codigo_editar.grid(row=0, column=1, padx=10, pady=10)
+        entry_codigo_editar.insert(0, codigo_original)
+
+        tk.Label(ventana_editar, text="Nombre:", font=("Arial", 12), bg="#F0F0F0").grid(row=1, column=0, padx=10, pady=10)
+        entry_nombre_editar = tk.Entry(ventana_editar, width=30)
+        entry_nombre_editar.grid(row=1, column=1, padx=10, pady=10)
+        entry_nombre_editar.insert(0, nombre_original)
+
+        tk.Label(ventana_editar, text="Existencia:", font=("Arial", 12), bg="#F0F0F0").grid(row=2, column=0, padx=10, pady=10)
+        entry_existencia_editar = tk.Entry(ventana_editar, width=30)
+        entry_existencia_editar.grid(row=2, column=1, padx=10, pady=10)
+        entry_existencia_editar.insert(0, existencia_original)
+
+        tk.Label(ventana_editar, text="Proveedor:", font=("Arial", 12), bg="#F0F0F0").grid(row=3, column=0, padx=10, pady=10)
+        entry_proveedor_editar = tk.Entry(ventana_editar, width=30)
+        entry_proveedor_editar.grid(row=3, column=1, padx=10, pady=10)
+        entry_proveedor_editar.insert(0, proveedor_original)
+
+        tk.Label(ventana_editar, text="Precio:", font=("Arial", 12), bg="#F0F0F0").grid(row=4, column=0, padx=10, pady=10)
+        entry_precio_editar = tk.Entry(ventana_editar, width=30)
+        entry_precio_editar.grid(row=4, column=1, padx=10, pady=10)
+        entry_precio_editar.insert(0, precio_original)
+
+        def guardar_cambios():
+            codigo_editado = entry_codigo_editar.get().strip()
+            nombre_editado = entry_nombre_editar.get().strip()
+            existencia_editada = entry_existencia_editar.get().strip()
+            proveedror_editada = entry_proveedor_editar.get().strip()
+            precio_editada = entry_precio_editar.get().strip()
+
+            if not codigo_editado or not nombre_editado or not existencia_editada or not proveedror_editada or not precio_editada:
+                messagebox.showwarning("Campos vacíos", "Debes llenar al menos un campo.")
+                return
+            
+             # Actualizar el excel
+            wb = openpyxl.load_workbook(ARCHIVO)
+            hoja = wb[HOJA]
+            for fila in hoja.iter_rows(min_row=2):
+                if str(fila[0].value) == str(codigo_original):
+                    fila[0].value = codigo_editado
+                    fila[1].value = nombre_editado
+                    fila[2].value = existencia_editada
+                    fila[3].value = proveedror_editada
+                    fila[4].value = precio_editada
+                    break
+
+            wb.save(ARCHIVO)
+            wb.close()
+
+            # Actualiza solo la fila que se editó y muestra mensaje que se editó correctamente
+            tabla.item(producto_seleccionado, values=(codigo_editado, nombre_editado, existencia_editada, proveedror_editada, precio_editada))
+            messagebox.showinfo("Editado", "Información de producto actualizada correctamente")
+            ventana_editar.destroy()  # Cierra la ventana de edición
+
+        tk.Button(ventana_editar, text="Guardar Cambios", bg="#FFC107", fg="black",
+                        font=("Arial", 12, "bold"), command=guardar_cambios).grid(row=5, column=0, columnspan=2, pady=20)
+        
+    def eliminar_producto():
+        producto_seleccionado = tabla.focus()
+        if not producto_seleccionado:
+            messagebox.showwarning("Eliminar", "Selecciona un producto para eliminar")
+            return
+
+        valores = tabla.item(producto_seleccionado, "values")
+        codigo_producto = valores[0]
+        nombre_producto = valores[1]
+        confirmar = messagebox.askyesno("Confirmar Eliminación", f"¿Estás seguro de eliminar el producto {nombre_producto} con código {codigo_producto}?")
+        if not confirmar:
+            return
+        
+        # Elimina del excel
+        wb = openpyxl.load_workbook(ARCHIVO)
+        hoja = wb[HOJA]
+        for fila in hoja.iter_rows(min_row=2):
+            if str(fila[0].value) == str(codigo_producto):
+                hoja.delete_rows(fila[0].row, 1)
+                break
+
+        wb.save(ARCHIVO)
+        wb.close()
+
+        # Elimina de la tabla y muestra mensaje que se eliminó correctamente
+        tabla.delete(producto_seleccionado)
+        messagebox.showinfo("Eliminado", "Producto eliminado correctamente.")
+
     # Inicializador
     crear_excel_y_hoja()
 
@@ -166,6 +268,16 @@ def mostrar_inventario(ventana, volver_callback):
     btn_todos = tk.Button(frame_buscar, text="Mostrar Todos", bg="#9E9E9E", fg="white",
                         font=("Arial", 11, "bold"), command=actualizar_tabla)
     btn_todos.grid(row=0, column=3, padx=10)
+
+    #btn de editar y eliminar
+    frame_botones = tk.Frame(ventana, bg="#F0F0F0")
+    frame_botones.pack(pady=10)
+
+    tk.Button(frame_buscar, text="Editar", bg="#FFC107", fg="white", font=("Arial", 12, "bold"),
+                    command=editar_productos).grid(row=0, column=4, padx=5)
+
+    tk.Button(frame_buscar, text="Eliminar", bg="#F44336", fg="white",
+            font=("Arial", 12, "bold"), command=eliminar_producto).grid(row=0, column=5, padx=5)
 
     # Tabla
     frame_tabla = tk.Frame(ventana)
