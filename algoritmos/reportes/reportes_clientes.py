@@ -26,7 +26,7 @@ def mostrar_reportesClientes(ventana, volver_callback):
 
     # Título
     titulo = tk.Label(ventana, text="Reportes de clientes", font=("Arial", 20, "bold"))
-    titulo.pack(pady=35)
+    titulo.pack(pady=10)
 
     ARCHIVO = "algoritmos/transacciones_ventas/proyecto.xlsx"
     #wb = openpyxl.load_workbook(ARCHIVO)
@@ -45,7 +45,12 @@ def mostrar_reportesClientes(ventana, volver_callback):
 
     # Unir con los datos de los clientes
     reporte = pd.merge(reporte, clientes, left_on='Codigo Cliente', right_on='Codigo', how='left')
-    reporte.fillna("—", inplace=True)  #Evita NaN en los datos
+    reporte = reporte.fillna({
+    "Codigo Cliente": "—",
+    "Nombre": "—",
+    "Numero_Compras": 0,
+    "Total_Gastado": 0.0
+    })
 
     # Seleccionar columnas finales
     reporte_final = reporte[['Nombre', 'Numero_Compras', 'Total_Gastado']]
@@ -81,9 +86,10 @@ def mostrar_reportesClientes(ventana, volver_callback):
             nombre_archivo="Reporte_Clientes.xlsx",
             ruta_de_adjunto="algoritmos/reportes"
         )
-    btn_enviar = tk.Button(ventana, text="Enviar Reporte" , width=25, height=2, bg="#4CAF50", fg="white", command=solicitar_envio_correo)
-    btn_enviar.pack(pady=10, side='bottom')
-
+    #Boton para enviar reporte
+    btn_enviar = ttk.Button(text="Enviar Reporte", width=25, padding=10, bootstyle="info-outline",
+                            command=solicitar_envio_correo)
+    btn_enviar.pack(pady=15, side='bottom')
 
 #Funcion para enviar el reporte de clientes por correo
 def enviar_reporte(asunto, cuerpo, destinatario, titulo, nombre_archivo, ruta_de_adjunto):

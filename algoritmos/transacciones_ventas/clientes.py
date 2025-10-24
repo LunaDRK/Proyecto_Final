@@ -188,16 +188,19 @@ def mostrar_clientes(ventana, volver_callback):
         tabla.delete(cliente_seleccionado)
         messagebox.showinfo("Eliminado", "Cliente eliminado correctamente.")
 
-    #Configuración de la ventana
-    """ventana = tk.Tk()
-    ventana.title("Gestión de Clientes")
-    ventana.geometry("900x600")
-    ventana.configure(bg="#F0F0F0")"""
+        # Elimina las ventas del cliente
+        wb = openpyxl.load_workbook(ARCHIVO)
+        if "Ventas" in wb.sheetnames:
+            hoja_ventas = wb["Ventas"]
+            filas_a_eliminar = []
+            for fila in range(2, hoja_ventas.max_row + 1):
+                if str(hoja_ventas.cell(fila, 2).value) == str(codigo_cliente):
+                    filas_a_eliminar.append(fila)
+            for fila in reversed(filas_a_eliminar):  # eliminar de abajo hacia arriba
+                hoja_ventas.delete_rows(fila, 1)
+        wb.save(ARCHIVO)
+        wb.close()
 
-    #boton de regresar
-    """btn_regresar = tk.Button(ventana, text="Regresar", width=25, height=2, bg="#9E9E9E", fg="white", font=("Arial", 12, "bold"),
-                                            command=lambda: regresar("Regresar"))
-    btn_regresar.pack(pady=10)"""
 
     # Crear archivo si no existe
     crear_excel()
@@ -253,7 +256,6 @@ def mostrar_clientes(ventana, volver_callback):
     ttk.Button(frame_buscar, text="Eliminar", padding=5, bootstyle="danger-outline", width=10,
              command=eliminar_cliente).grid(row=0, column=5, padx=5)
 
-
     # Tabla de clientes
     frame_tabla = tk.Frame(ventana)
     frame_tabla.pack(pady=10)
@@ -267,5 +269,3 @@ def mostrar_clientes(ventana, volver_callback):
 
     # Cargar datos iniciales
     actualizar_tabla()
-
-    #ventana.mainloop()

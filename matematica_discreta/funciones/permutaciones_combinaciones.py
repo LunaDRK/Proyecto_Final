@@ -19,12 +19,17 @@ def mostrar_permutacion(ventana, volver_callback):
     #titulo de la pagina
     titulo = tk.Label(ventana, text="Combinaciones y Permutaciones:", font=("Arial", 20, "bold"))
     titulo.pack(pady=40)
+
     #funcion para permutacion
     def permutacion():
         try:
             n = int(dato_n.get())
             r = int(dato_r.get())
             resultado = perm(n, r)
+            #controlar los datos por si no hay logica
+            if n < 0 or r < 0 or r > n:
+                messagebox.showerror("Error", "Valores inválidos: asegúrese que r ≤ n")
+                return
             formato = f"""
     {n}!
     {n}({r}) =  ------------ = {resultado}
@@ -32,13 +37,17 @@ def mostrar_permutacion(ventana, volver_callback):
             """
             mostrar_formula(formato)
         except ValueError:
-            print("Ingrese datos válidos")
+            messagebox.showerror("Error", "Ingrese números válidos")
     #funcion para la combi
     def combinacion():
         try:
             n = int(dato_n.get())
             r = int(dato_r.get())
             resultado = comb(n, r)
+            #controlar los datos por si no hay logica
+            if n < 0 or r < 0 or r > n:
+                messagebox.showerror("Error", "Valores inválidos: asegúrese que r ≤ n")
+                return
             formato = f"""
     {n}!
     {n}({r}) =  ------------ = {resultado}
@@ -46,8 +55,7 @@ def mostrar_permutacion(ventana, volver_callback):
             """
             mostrar_formula(formato)
         except ValueError:
-            print("Ingrese datos válidos")
-    # para la pantalla 
+            messagebox.showerror("Error", "Ingrese números válidos")
 
     # Crear frame para los entry
     frame_nr = tk.Frame(ventana, bg="#F0F0F0")

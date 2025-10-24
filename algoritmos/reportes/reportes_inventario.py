@@ -25,7 +25,7 @@ def mostrar_reportesInventario(ventana, volver_callback):
 
     # Título
     titulo = tk.Label(ventana, text="Reportes de inventario", font=("Arial", 20, "bold"))
-    titulo.pack(pady=35)
+    titulo.pack(pady=10)
 
     ARCHIVO = "algoritmos/transacciones_ventas/proyecto.xlsx"
     productos = pd.read_excel(ARCHIVO, sheet_name='Inventario')
@@ -43,7 +43,12 @@ def mostrar_reportesInventario(ventana, volver_callback):
 
     # Unir con la lista de productos para obtener el nombre
     reporte = pd.merge(reporte, productos, left_on='Codigo Producto', right_on='Codigo', how='left')
-    reporte.fillna("—", inplace=True)  #Evita NaN en los datos
+    reporte = reporte.fillna({
+    "Codigo Cliente": "—",
+    "Nombre": "—",
+    "Numero_Compras": 0,
+    "Total_Gastado": 0.0
+    })
 
     # Seleccionar columnas finales
     reporte_final = reporte[['Nombre', 'Veces_Vendido', 'Total_Ventas']]
@@ -80,9 +85,11 @@ def mostrar_reportesInventario(ventana, volver_callback):
             nombre_archivo="Reporte_Inventario.xlsx",
             ruta_de_adjunto="algoritmos/reportes"
         )
-    btn_enviar = tk.Button(ventana, text="Enviar Reporte", width=25, height=2, bg="#4CAF50", fg="white",
-                           command=solicitar_envio_correo)
-    btn_enviar.pack(pady=10, side='bottom')
+
+    #boton para enviar reporte
+    btn_enviar = ttk.Button(text="Enviar Reporte", width=25, padding=10, bootstyle="info-outline",
+                            command=solicitar_envio_correo)
+    btn_enviar.pack(pady=15, side='bottom')
 
 #Funcion para enviar el reporte de inventario por correo
 def enviar_reporte(asunto, cuerpo, destinatario, titulo, nombre_archivo, ruta_de_adjunto):

@@ -249,12 +249,17 @@ def mostrar_ventas(ventana, volver_callback):
 
         wb = openpyxl.load_workbook(ARCHIVO)
         hoja = wb["Ventas"]
+        # Eliminar todas las coincidencias de esa venta
+        filas_a_eliminar = []
         for fila in range(2, hoja.max_row + 1):
-            if (hoja.cell(fila, 1).value == codigo_producto and
-                hoja.cell(fila, 2).value == codigo_cliente and
+            if (str(hoja.cell(fila, 1).value) == str(codigo_producto) and
+                str(hoja.cell(fila, 2).value) == str(codigo_cliente) and
                 int(hoja.cell(fila, 3).value) == cantidad):
-                hoja.delete_rows(fila, 1)
-                break
+                filas_a_eliminar.append(fila)
+
+        for fila in reversed(filas_a_eliminar):
+            hoja.delete_rows(fila, 1)
+
         wb.save(ARCHIVO)
         wb.close()
 
