@@ -19,7 +19,7 @@ def mostrar_ecuacion(ventana, volver_callback):
     # Título
     ttk.Label(ventana, text="Sistemas de Ecuaciones Lineales", font=("Arial", 20, "bold")).pack(pady=20)
 
-    # Métodos numéricos
+    # metodo de gauss-jordan
     def metodo_gauss_jordan(A, b):
         A = np.array(A, float)
         b = np.array(b, float)
@@ -30,6 +30,7 @@ def mostrar_ecuacion(ventana, volver_callback):
             if M[i, i] == 0:
                 return None
             M[i] = M[i] / M[i, i]
+            #muestra el procedimiento
             txt_procedimiento.insert(tk.END, f"Normalizamos la fila {i+1}")
             txt_procedimiento.insert(tk.END, f" Dividimos la fila {i+1} entre el pivote ({M[i, i]:.2f})\n")
             txt_procedimiento.insert(tk.END, f"Matriz actual:\n{np.array2string(M, precision=2, floatmode='fixed')}\n\n")
@@ -37,6 +38,7 @@ def mostrar_ecuacion(ventana, volver_callback):
             for j in range(n):
                 if j != i:
                     M[j] = M[j] - M[i] * M[j, i]
+                    #muestra el procedimiento
                     txt_procedimiento.insert(tk.END, f"Eliminamos el elemento ({j+1},{i+1})")
                     txt_procedimiento.insert(tk.END, f" Eliminamos el elemento en la posición ({j+1},{i+1})\n")
                     txt_procedimiento.insert(tk.END, f"Matriz actual:\n{np.array2string(M, precision=2, floatmode='fixed')}\n\n")
@@ -48,13 +50,14 @@ def mostrar_ecuacion(ventana, volver_callback):
         b = np.array(b, float)
         detA = np.linalg.det(A)
 
+        #muestra el procedimiento
         txt_procedimiento.delete("1.0", tk.END)
         txt_procedimiento.insert(tk.END, f"Matriz A:\n{np.array2string(A, precision=2, floatmode='fixed')}\n")
         txt_procedimiento.insert(tk.END, f"Vector b:\n{b}\n\n")
         txt_procedimiento.insert(tk.END, f"Determinante de A: {detA:.2f}\n\n")
 
         if detA == 0:
-            #txt_procedimiento.insert(tk.END, "El determinante es 0 → el sistema no tiene solución única.\n")
+            #txt_procedimiento.insert(tk.END, "El determinante es 0 el sistema no tiene solución única.\n")
             return None
 
         n = len(b)
@@ -65,7 +68,7 @@ def mostrar_ecuacion(ventana, volver_callback):
             detAi = np.linalg.det(copia)
             valor = (detAi / detA)
 
-            #txt_procedimiento.insert(tk.END, f"Paso {i+1} ---\n")
+            #muestra el procedimiento
             txt_procedimiento.insert(tk.END, f"Matriz A{i+1} (reemplazando columna {i+1} por b):\n")
             txt_procedimiento.insert(tk.END, f"{np.array2string(copia, precision=2, floatmode='fixed')}\n")
             txt_procedimiento.insert(tk.END, f"Det(A{i+1}) = {detAi:.2f}\n")
@@ -117,9 +120,6 @@ def mostrar_ecuacion(ventana, volver_callback):
             cajas_b.append(entrada_b)
 
     crear_entradas()
-
-    # Botón actualizar tamaño
-
 
     lbl_resultado = ttk.Label(ventana, text="", font=("Arial", 12))
     lbl_resultado.pack(pady=10)
