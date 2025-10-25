@@ -71,6 +71,9 @@ def mostrar_mcd(ventana, volver_callback):
             if b == 0:
                 raise ZeroDivisionError
 
+            if b > a:
+                a, b = b, a
+
             pasos, resultado = euclides_pasos(a, b)
             for paso in pasos:
                 mostrar_paso(paso)
