@@ -25,7 +25,7 @@ def mostrar_inversa(ventana, volver_callback):
     frame_entrada = tk.Frame(ventana, bg="#F0F0F0")
     frame_entrada.pack(pady=10)
 
-    tk.Label(frame_entrada, text="Ingrese la matriz (filas separadas por ';', números por espacios):", 
+    tk.Label(frame_entrada, text="Ingrese la matriz (filas separadas por ' ; ' , números por espacios:", 
              font=("Arial", 14), bg="#F0F0F0").grid(row=0, column=0, padx=10, pady=5, sticky="w")
     entrada = tk.Entry(frame_entrada, width=50, font=("Arial", 12))
     entrada.grid(row=1, column=0, padx=10, pady=5)
@@ -53,7 +53,7 @@ def mostrar_inversa(ventana, volver_callback):
 
             if matriz.shape[0] != matriz.shape[1]:
                 messagebox.showerror("Error", f"La matriz debe ser cuadrada")
-                return
+                return  
 
             inversa = np.linalg.inv(matriz)
             # Formato cpn llaves para multiplicacion

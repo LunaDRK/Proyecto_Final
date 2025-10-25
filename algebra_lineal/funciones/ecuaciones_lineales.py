@@ -30,17 +30,31 @@ def mostrar_ecuacion(ventana, volver_callback):
             if M[i, i] == 0:
                 return None
             M[i] = M[i] / M[i, i]
+            txt_procedimiento.insert(tk.END, f"Normalizamos la fila {i+1}")
+            txt_procedimiento.insert(tk.END, f" Dividimos la fila {i+1} entre el pivote ({M[i, i]:.2f})\n")
+            txt_procedimiento.insert(tk.END, f"Matriz actual:\n{np.array2string(M, precision=2, floatmode='fixed')}\n\n")
+
             for j in range(n):
                 if j != i:
                     M[j] = M[j] - M[i] * M[j, i]
+                    txt_procedimiento.insert(tk.END, f"Eliminamos el elemento ({j+1},{i+1})")
+                    txt_procedimiento.insert(tk.END, f" Eliminamos el elemento en la posición ({j+1},{i+1})\n")
+                    txt_procedimiento.insert(tk.END, f"Matriz actual:\n{np.array2string(M, precision=2, floatmode='fixed')}\n\n")
         return M[:, -1]
-
+    
+    #metodo de cramer
     def metodo_cramer(A, b):
         A = np.array(A, float)
         b = np.array(b, float)
         detA = np.linalg.det(A)
 
+        txt_procedimiento.delete("1.0", tk.END)
+        txt_procedimiento.insert(tk.END, f"Matriz A:\n{np.array2string(A, precision=2, floatmode='fixed')}\n")
+        txt_procedimiento.insert(tk.END, f"Vector b:\n{b}\n\n")
+        txt_procedimiento.insert(tk.END, f"Determinante de A: {detA:.2f}\n\n")
+
         if detA == 0:
+            #txt_procedimiento.insert(tk.END, "El determinante es 0 → el sistema no tiene solución única.\n")
             return None
 
         n = len(b)
@@ -49,8 +63,14 @@ def mostrar_ecuacion(ventana, volver_callback):
             copia = A.copy()
             copia[:, i] = b
             detAi = np.linalg.det(copia)
-            x.append(detAi / detA)
+            valor = (detAi / detA)
 
+            #txt_procedimiento.insert(tk.END, f"Paso {i+1} ---\n")
+            txt_procedimiento.insert(tk.END, f"Matriz A{i+1} (reemplazando columna {i+1} por b):\n")
+            txt_procedimiento.insert(tk.END, f"{np.array2string(copia, precision=2, floatmode='fixed')}\n")
+            txt_procedimiento.insert(tk.END, f"Det(A{i+1}) = {detAi:.2f}\n")
+            txt_procedimiento.insert(tk.END, f"x{i+1} = Det(A{i+1}) / Det(A) = {detAi:.2f} / {detA:.2f} = {valor:.2f}\n\n")
+            x.append(valor)
         return x
 
     # Método seleccionado
@@ -99,11 +119,14 @@ def mostrar_ecuacion(ventana, volver_callback):
     crear_entradas()
 
     # Botón actualizar tamaño
-    btn_actualizar = ttk.Button(ventana, text="Actualizar tamaño", width=25, padding=10, bootstyle="info-outline", command=crear_entradas)
-    btn_actualizar.pack(pady=8)
+
 
     lbl_resultado = ttk.Label(ventana, text="", font=("Arial", 12))
     lbl_resultado.pack(pady=10)
+
+    #procedimiento
+    txt_procedimiento = tk.Text(ventana, width=60, height=10, wrap="word", bg="#F8F8F8", font=("Arial", 12))
+    txt_procedimiento.pack(pady=2)
 
     # Resolver ecuaciones
     def resolver():
@@ -151,6 +174,13 @@ def mostrar_ecuacion(ventana, volver_callback):
         except Exception as e:
             messagebox.showerror("Error", f"Verifica que todos los campos tengan números válidos.")
 
-    # Botón resolver
-    btn_resolver = ttk.Button(ventana, text="Resolver", width=25, padding=10, bootstyle="success-outline", command=resolver)
-    btn_resolver.pack(pady=12)
+    frame_botones = ttk.Frame(ventana)
+    frame_botones.pack(pady=10)
+
+    # Boton Actualizar tamaño
+    btn_actualizar = ttk.Button(frame_botones, text="Actualizar tamaño", width=25, padding=10, bootstyle="info-outline", command=crear_entradas)
+    btn_actualizar.pack(side="left", padx=10)
+
+    # Boton Resolver
+    btn_resolver = ttk.Button(frame_botones, text="Resolver", width=25, padding=10, bootstyle="success-outline", command=resolver)
+    btn_resolver.pack(side="left", padx=10)

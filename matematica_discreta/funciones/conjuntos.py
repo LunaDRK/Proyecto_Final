@@ -18,7 +18,7 @@ def mostrar_conjuntos(ventana, volver_callback):
     titulo = tk.Label(ventana, text="Conjuntos", font=("Arial", 20, "bold"))
     titulo.pack(pady=40)
 
-    #funciones para los conjuntos 
+    #funciones para los conjuntos
     def union():
         try:
             lista1 = lista.get().split()
