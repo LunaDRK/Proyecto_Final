@@ -56,7 +56,7 @@ def mostrar_inversa(ventana, volver_callback):
                 return
 
             inversa = np.linalg.inv(matriz)
-            # Formato bonito con llaves como en tu multiplicación
+            # Formato cpn llaves para multiplicacion
             filas_formateadas = ["{ " + "   ".join(f"{num:6.2f}" for num in fila) + " }" for fila in inversa]
             # Dentro de la función calcular()
             texto_inversa = "\n".join(["  ".join(f"{num:8.2f}" for num in fila) for fila in inversa])

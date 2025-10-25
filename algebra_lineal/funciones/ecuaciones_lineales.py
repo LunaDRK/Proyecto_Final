@@ -132,7 +132,7 @@ def mostrar_ecuacion(ventana, volver_callback):
                         lbl_resultado.config(text="El sistema no tiene solución única (el determinante es igual a 0).")
                         return
                 # Redondear los valores
-                sol = np.round(sol, 0)
+                sol = np.round(sol, 2)
 
                 # Crear nombres de variables según el tamaño del sistema
                 n = len(sol)
