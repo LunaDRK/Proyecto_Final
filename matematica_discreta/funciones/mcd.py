@@ -3,6 +3,7 @@ from tkinter import messagebox
 import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
 
+#Funcion para limpiar ventanas anteriores
 def limpiar_ventana(ventana):
     for widget in ventana.winfo_children():
         widget.destroy()
@@ -22,15 +23,17 @@ def mostrar_mcd(ventana, volver_callback):
     frame_mcd = tk.Frame(ventana, bg="#F0F0F0")
     frame_mcd.pack(pady=20)
 
+    # Primer numero 
     tk.Label(frame_mcd, text="Ingrese el primer número   :", font=("Arial", 14), bg="#F0F0F0").grid(row=0, column=0, padx=10, pady=8, sticky="e")
     dato = tk.Entry(frame_mcd, width=40, font=("Arial", 12))
     dato.grid(row=0, column=1, padx=10, pady=8)
-
+    
+    # Segundo Numero
     tk.Label(frame_mcd, text="Ingrese el segundo número:", font=("Arial", 14), bg="#F0F0F0").grid(row=1, column=0, padx=10, pady=8, sticky="e")
     datob = tk.Entry(frame_mcd, width=40, font=("Arial", 12))
     datob.grid(row=1, column=1, padx=10, pady=8)
 
-    # Área donde se mostrarán los pasos
+    # Area de procediminento
     pasos_text = tk.Text(ventana, width=50, height=10, wrap="word", state="disabled", bg="#F8F8F8", font=("Arial", 16))
     pasos_text.pack(pady=10)
 
@@ -38,20 +41,23 @@ def mostrar_mcd(ventana, volver_callback):
     respu = tk.Label(ventana, text="", font=("Arial", 14, "bold"))
     respu.pack(pady=10)
 
+    # Función para mostrar pasos en el área de texto
     def mostrar_paso(texto):
         pasos_text.config(state="normal")
         pasos_text.insert(tk.END, texto + "\n")
         pasos_text.config(state="disabled")
         pasos_text.see(tk.END)
 
+    # Algoritmo de Euclides y guarda pasos
     def euclides_pasos(a, b):
         pasos = []
         while b != 0:
             residuo = a % b
             pasos.append(f"{a} = {b} x {a // b} + {residuo}")
             a, b = b, residuo
-        return pasos, a  # a es el MCD
+        return pasos, a  # "a" es el MCD
 
+    # Función para calcular el MCD y mostrar los pasos
     def calcular_mcd():
         pasos_text.config(state="normal")
         pasos_text.delete("1.0", tk.END)
@@ -77,4 +83,4 @@ def mostrar_mcd(ventana, volver_callback):
     ttk.Button(ventana, text="Calcular MCD", command=calcular_mcd, width=50,
               padding=20, bootstyle="success-outline").pack(pady=15)
 
-    ventana.mainloop()
+
