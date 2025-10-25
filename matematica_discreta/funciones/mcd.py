@@ -15,6 +15,7 @@ def mostrar_mcd(ventana, volver_callback):
     btn_volver = ttk.Button(ventana, text="← Regresar", width=15, padding=10, bootstyle="danger-outline",
                            command=volver_callback)
     btn_volver.pack(side="top", anchor="nw", padx=15, pady=15)
+    
     #titolo de la pagina
     titulo = tk.Label(ventana, text="MCD metodo de Euclides:", font=("Arial", 20, "bold"))
     titulo.pack(pady=40)
